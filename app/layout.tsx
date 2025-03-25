@@ -37,6 +37,7 @@ export default function RootLayout({
             colorInputText: "#fff",
           },
         }}
+        fallbackRedirectUrl="/"
       >
         <body className={`${inter.className} bg-dark-2`}>
           <Toaster />
