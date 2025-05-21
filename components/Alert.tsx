@@ -7,9 +7,10 @@ import { Card, CardContent } from './ui/card';
 interface PermissionCardProps {
   title: string;
   iconUrl?: string;
+  description?: string; // Added description prop
 }
 
-const Alert = ({ title, iconUrl }: PermissionCardProps) => {
+const Alert = ({ title, iconUrl, description }: PermissionCardProps) => {
   return (
     <section className="flex-center h-screen w-full">
       <Card className="w-full max-w-[520px] border-none bg-dark-1 p-6 py-9 text-white">
@@ -22,8 +23,10 @@ const Alert = ({ title, iconUrl }: PermissionCardProps) => {
                 </div>
               )}
               <p className="text-center text-xl font-semibold">{title}</p>
+              {description && (
+                <p className="text-center text-lg text-gray-400">{description}</p>
+              )}
             </div>
-
             <Button asChild className="bg-blue-1">
               <Link href="/">Back to Home</Link>
             </Button>

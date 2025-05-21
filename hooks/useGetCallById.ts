@@ -8,18 +8,45 @@ export const useGetCallById = (id: string | string[]) => {
   const client = useStreamVideoClient();
 
   useEffect(() => {
-    if (!client) return;
-    
+    console.log('useGetCallById: client initialized:', !!client);
+    console.log('useGetCallById: fetching call with ID:', id);
+
+    if (!client) {
+      console.error('Stream client is not initialized.');
+      setIsCallLoading(false);
+      return;
+    }
+
     const loadCall = async () => {
       try {
-        // https://getstream.io/video/docs/react/guides/querying-calls/#filters
-        const { calls } = await client.queryCalls({ filter_conditions: { id } });
+        // First try to get the call directly
+        try {
+          const callId = Array.isArray(id) ? id[0] : id;
+          console.log('Trying to get call directly with ID:', callId);
+          const directCall = client.call('default', callId);
+          await directCall.get();
+          console.log('useGetCallById: Call found directly:', directCall);
+          setCall(directCall);
+          setIsCallLoading(false);
+          return;
+        } catch (directError) {
+          console.log('Could not get call directly, trying query:', directError);
+        }
 
-        if (calls.length > 0) setCall(calls[0]);
+        // If direct get fails, try querying
+        const { calls } = await client.queryCalls({
+          filter_conditions: { id },
+        });
 
-        setIsCallLoading(false);
+        if (calls.length > 0) {
+          console.log('useGetCallById: Call found via query:', calls[0]);
+          setCall(calls[0]);
+        } else {
+          console.warn('useGetCallById: No calls found for the provided ID.');
+        }
       } catch (error) {
-        console.error(error);
+        console.error('useGetCallById: Error querying calls:', error);
+      } finally {
         setIsCallLoading(false);
       }
     };

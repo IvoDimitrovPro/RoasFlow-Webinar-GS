@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import { useUser } from "@clerk/nextjs";
-import { useStreamVideoClient } from "@stream-io/video-react-sdk";
-import { useRouter } from "next/navigation";
+import { useUser } from '@clerk/nextjs';
+import { useStreamVideoClient } from '@stream-io/video-react-sdk';
 
-import { useGetCallById } from "@/hooks/useGetCallById";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useGetCallById } from '@/hooks/useGetCallById';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 const Table = ({
   title,
@@ -28,7 +27,6 @@ const Table = ({
 };
 
 const PersonalRoom = () => {
-  const router = useRouter();
   const { user } = useUser();
   const client = useStreamVideoClient();
   const { toast } = useToast();
@@ -40,7 +38,7 @@ const PersonalRoom = () => {
   const startRoom = async () => {
     if (!client || !user) return;
 
-    const newCall = client.call("default", meetingId!);
+    const newCall = client.call('default', meetingId!);
 
     if (!call) {
       await newCall.getOrCreate({
@@ -50,7 +48,7 @@ const PersonalRoom = () => {
       });
     }
 
-    router.push(`/meeting/${meetingId}?personal=true`);
+    window.open(`/meeting/${meetingId}?personal=true`, '_blank');
   };
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?personal=true`;
@@ -72,7 +70,7 @@ const PersonalRoom = () => {
           onClick={() => {
             navigator.clipboard.writeText(meetingLink);
             toast({
-              title: "Link Copied",
+              title: 'Link Copied',
             });
           }}
         >

@@ -13,11 +13,13 @@ import { Textarea } from './ui/textarea';
 import ReactDatePicker from 'react-datepicker';
 import { useToast } from './ui/use-toast';
 import { Input } from './ui/input';
+import WebinarModeToggle from './WebinarModeToggle';
 
 const initialValues = {
   dateTime: new Date(),
   description: '',
   link: '',
+  isWebinar: false,
 };
 
 const MeetingTypeList = () => {
@@ -49,6 +51,7 @@ const MeetingTypeList = () => {
           starts_at: startsAt,
           custom: {
             description,
+            isWebinar: values.isWebinar,
           },
         },
       });
@@ -128,8 +131,15 @@ const MeetingTypeList = () => {
               timeFormat="HH:mm"
               timeIntervals={15}
               timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa"
+              dateFormat="dd/MM/yyyy HH:mm"
               className="w-full rounded bg-dark-3 p-2 focus:outline-none"
+            />
+          </div>
+
+          <div className="mt-2">
+            <WebinarModeToggle
+              isWebinar={values.isWebinar}
+              setIsWebinar={(isWebinar) => setValues({ ...values, isWebinar })}
             />
           </div>
         </MeetingModal>
@@ -155,7 +165,7 @@ const MeetingTypeList = () => {
         title="Type the link here"
         className="text-center"
         buttonText="Join Meeting"
-        handleClick={() => router.push(values.link)}
+        handleClick={() => window.open(values.link, '_blank')}
       >
         <Input
           placeholder="Meeting link"

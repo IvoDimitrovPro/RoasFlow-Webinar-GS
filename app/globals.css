@@ -8,6 +8,19 @@
   box-sizing: border-box;
 }
 
+/* Custom font removed as it's not being used */
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SFProDisplay-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'SF Pro Display', sans-serif;
+}
+
 /* ======== stream css overrides ======== */
 .str-video__call-stats {
   max-width: 500px;
@@ -44,13 +57,13 @@
 
 .glassmorphism {
   background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 .glassmorphism2 {
   background: rgba(18, 17, 17, 0.25);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 /* ==== clerk class override ===== */
@@ -96,17 +109,17 @@
   width: 100%;
   max-width: 350px;
   display: block;
-  animation: show 0.7s forwards linear;
+  animation: show 0.7s forwards ease-in;
 }
 
 @keyframes show {
   0% {
-    animation-timing-function: ease-in;
-    width: 0%;
+    transform: scaleX(0);
+    transform-origin: left;
   }
 
   100% {
-    animation-timing-function: ease-in;
-    width: 100%;
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }

@@ -11,7 +11,7 @@ export const useGetCalls = () => {
   useEffect(() => {
     const loadCalls = async () => {
       if (!client || !user?.id) return;
-      
+
       setIsLoading(true);
 
       try {
@@ -39,14 +39,27 @@ export const useGetCalls = () => {
   }, [client, user?.id]);
 
   const now = new Date();
+  const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
 
+  // Modified to exclude recently started meetings (less than 1 hour ago) from endedCalls
   const endedCalls = calls?.filter(({ state: { startsAt, endedAt } }: Call) => {
-    return (startsAt && new Date(startsAt) < now) || !!endedAt
-  })
+    if (!!endedAt) return true; // Explicitly ended meetings
+    if (!startsAt) return false; // No start time
+    
+    const startTime = new Date(startsAt);
+    // Only consider it ended if it started more than 1 hour ago
+    return startTime < oneHourAgo;
+  });
 
-  const upcomingCalls = calls?.filter(({ state: { startsAt } }: Call) => {
-    return startsAt && new Date(startsAt) > now
-  })
+  // Modified to include upcoming meetings AND recently started meetings (within the last hour)
+  const upcomingCalls = calls?.filter(({ state: { startsAt, endedAt } }: Call) => {
+    if (!!endedAt) return false; // Explicitly ended meetings are not upcoming
+    if (!startsAt) return false; // No start time
+    
+    const startTime = new Date(startsAt);
+    // Include if it's in the future OR if it started less than 1 hour ago
+    return startTime > oneHourAgo;
+  });
 
-  return { endedCalls, upcomingCalls, callRecordings: calls, isLoading }
+  return { endedCalls, upcomingCalls, callRecordings: calls, isLoading };
 };
