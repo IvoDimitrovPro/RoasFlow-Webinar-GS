@@ -11,7 +11,7 @@ import {
   useCall,
 } from '@stream-io/video-react-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Users, LayoutList, UserPlus } from 'lucide-react';
+import { Users, LayoutList, UserPlus, Settings } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -23,7 +23,10 @@ import {
 import Loader from './Loader';
 import EndCallButton from './EndCallButton';
 import ParticipantPermissions from './ParticipantPermissions';
+import WebinarModeToggle from './WebinarModeToggle';
+import ParticipantManagement from './ParticipantManagement';
 import { cn } from '@/lib/utils';
+import analytics, { WebinarEvent } from '@/lib/analytics';
 
 type CallLayoutType = 'grid' | 'speaker-left' | 'speaker-right';
 
@@ -44,6 +47,7 @@ const MeetingRoom = () => {
 
   const customData = useCallCustomData();
   const localParticipant = useLocalParticipant();
+  const callId = call?.id || '';
 
   // Check if the current user is the host/creator of the call
   const isHost = localParticipant && call?.state.createdBy && localParticipant.userId === call.state.createdBy.id;
@@ -51,15 +55,31 @@ const MeetingRoom = () => {
   // Initialize webinar mode from call custom data
   useEffect(() => {
     if (customData) {
-      setIsWebinar(customData.isWebinar || false);
+      // Check for both legacy isWebinar and new isWebinarMode fields
+      const webinarModeEnabled = customData.isWebinar || 
+                                (call?.state.settings?.custom?.isWebinarMode) || 
+                                false;
+      
+      setIsWebinar(webinarModeEnabled);
 
       // If in webinar mode and not the host, disable audio and video
-      if (customData.isWebinar && !isHost && call) {
+      if (webinarModeEnabled && !isHost && call) {
         call.camera.disable();
         call.microphone.disable();
       }
+      
+      // Track webinar mode state for analytics
+      if (webinarModeEnabled) {
+        analytics.trackWebinarEvent(
+          WebinarEvent.MODE_DETECTED, 
+          { 
+            meetingId: callId,
+            enabled: true,
+          }
+        );
+      }
     }
-  }, [customData, isHost, call]);
+  }, [customData, isHost, call, callId]);
 
   // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
@@ -77,8 +97,24 @@ const MeetingRoom = () => {
     }
   };
 
+  // Handle webinar mode change
+  const handleWebinarModeChange = (newValue: boolean) => {
+    setIsWebinar(newValue);
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
+      {/* Webinar mode toggle - only visible to hosts */}
+      {isHost && callId && (
+        <div className="absolute top-4 right-4 z-10 max-w-xs">
+          <WebinarModeToggle 
+            isWebinar={isWebinar} 
+            setIsWebinar={handleWebinarModeChange} 
+            callId={callId}
+          />
+        </div>
+      )}
+      
       <div className="relative flex size-full items-center justify-center">
         <div className=" flex size-full max-w-[1400px] items-center">
           <CallLayout />
@@ -96,7 +132,11 @@ const MeetingRoom = () => {
           })}
         >
           <div className="h-full overflow-auto">
-            <ParticipantPermissions />
+            {isHost && callId ? (
+              <ParticipantManagement callId={callId} isWebinarMode={isWebinar} />
+            ) : (
+              <ParticipantPermissions />
+            )}
           </div>
         </div>
       </div>
@@ -139,8 +179,8 @@ const MeetingRoom = () => {
           </div>
         </button>
 
-        {/* Show permissions button only for host in webinar mode */}
-        {isWebinar && isHost && (
+        {/* Show permissions button for host */}
+        {isHost && (
           <button
             type="button"
             title="Manage Participant Permissions"

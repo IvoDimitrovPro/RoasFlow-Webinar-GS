@@ -1,0 +1,109 @@
+{
+  "name": "RoasFlow Video Conferencing",
+  "short_name": "RoasFlow",
+  "description": "Secure video conferencing platform with recording, screen sharing, and webinar capabilities",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#161925",
+  "theme_color": "#0E78F9",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "bg",
+  "dir": "ltr",
+  "categories": ["productivity", "business", "communication"],
+  "iarc_rating_id": "",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "New Meeting",
+      "short_name": "New",
+      "description": "Start a new meeting",
+      "url": "/?newMeeting=true",
+      "icons": [{ "src": "/icons/add-meeting.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Join Meeting",
+      "short_name": "Join",
+      "description": "Join an existing meeting",
+      "url": "/?join=true",
+      "icons": [{ "src": "/icons/join-meeting.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Personal Room",
+      "short_name": "My Room",
+      "description": "Go to your personal meeting room",
+      "url": "/personal-room",
+      "icons": [{ "src": "/icons/add-personal.svg", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshots/home-screen.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Home screen of RoasFlow"
+    },
+    {
+      "src": "/images/screenshots/meeting-screen.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Active meeting in RoasFlow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "share_target": {
+    "action": "/share-target",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
