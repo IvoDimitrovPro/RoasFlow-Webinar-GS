@@ -1,0 +1,36 @@
+# RoasFlow Video Conferencing Platform - robots.txt
+# https://roasflow.com
+
+User-agent: *
+# Allow public pages
+Allow: /
+Allow: /features
+Allow: /pricing
+Allow: /about
+Allow: /contact
+Allow: /blog
+Allow: /help
+Allow: /terms
+Allow: /privacy
+
+# Disallow private meeting rooms and user data
+Disallow: /meeting/
+Disallow: /personal-room/
+Disallow: /api/
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /dashboard
+Disallow: /recordings/
+Disallow: /previous/
+Disallow: /upcoming/
+Disallow: /user/
+Disallow: /_next/
+
+# Disallow admin routes
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://roasflow.com/sitemap.xml
+
+# Crawl delay for high-traffic search engines
+Crawl-delay: 5
